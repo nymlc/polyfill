@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var loadScript = function loadScript(url, callback) {
+            var script = document.createElement('script');
+
+            script.onload = function () {
+                return callback();
+            };
+
+            script.src = url;
+            document.body.appendChild(script);
+        };
+        /**
+         * 获取url链接带的参数
+         * @param  {string} name 参数名
+         */
+        function getQueryString(name) {
+            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return r[2];
+            return null;
+        }
+        var index = location.hash.substring(1);
+        var url = index != '' ? `./promise/${index}.js` : `./polyfill.js`
+        loadScript(url, () => loadScript(`./promise/index.js`, () => {}))
+
+    </script>
+</body>
+
+</html>
