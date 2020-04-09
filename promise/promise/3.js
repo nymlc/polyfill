@@ -17,6 +17,10 @@ class Promise {
         return promise
     }
 
+    catch(onRejected) {
+        return this.then(null, onRejected)
+    }
+
     static _immediateFn(fn) {
         if (typeof setImmediate === 'function') {
             setImmediate(fn)
@@ -35,6 +39,7 @@ function resolve(nVal) {
 function reject(reason) {
     this._state = 2
     this._value = reason
+    final.call(this)
 }
 
 function final() {
@@ -60,7 +65,8 @@ function handle(self, handler) {
         try {
             ret = cb(_value)
         } catch (error) {
-            
+            reject.call(promise, error)
+            return
         }
         resolve.call(promise, ret)
     })
@@ -101,5 +107,4 @@ const globalNS = (() => {
 })()
 globalNS['Promise'] = Promise
 
-// 1. `resolve`延迟调用
-// 2. `then`得返回新`Promise`实例且能链式调用
+// 3. 缺少`catch`方法

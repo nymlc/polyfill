@@ -5,9 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .tip {
+            color: salmon;
+            text-align: center;
+            margin-top: 100px;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="tip">
+        看hash值加载对应的js以及执行对应的例子
+    </div>
     <script>
         var loadScript = function loadScript(url, callback) {
             var script = document.createElement('script');
@@ -31,7 +41,9 @@
         }
         var index = location.hash.substring(1);
         var url = index != '' ? `./promise/${index}.js` : `./polyfill.js`
-        loadScript(url, () => loadScript(`./promise/index.js`, () => {}))
+        loadScript(url, () => loadScript(`./promise/index.js`, () => {
+            window.Case[`case${index}`]()
+        }))
 
     </script>
 </body>

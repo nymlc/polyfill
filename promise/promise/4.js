@@ -17,6 +17,10 @@ class Promise {
         return promise
     }
 
+    catch(onRejected) {
+        return this.then(null, onRejected)
+    }
+
     static _immediateFn(fn) {
         if (typeof setImmediate === 'function') {
             setImmediate(fn)
@@ -27,14 +31,22 @@ class Promise {
 }
 
 function resolve(nVal) {
-    this._state = 1
-    this._value = nVal
-    final.call(this)
+    try {
+        if(nVal === this) {
+            throw new Error('Cannot be resolved with itself!')
+        }
+        this._state = 1
+        this._value = nVal
+        final.call(this)
+    } catch (error) {
+        reject.call(this, error)
+    }
 }
 
 function reject(reason) {
     this._state = 2
     this._value = reason
+    final.call(this)
 }
 
 function final() {
@@ -56,12 +68,19 @@ function handle(self, handler) {
         } = self
         const { onFulfilled, onRejected, promise } = handler
         const cb = _state === 1 ? onFulfilled : onRejected
+        if(cb == null) {
+            // 抛出异常，紧接着却是没有传入onRejected的then，导致cb不存在
+            (_state === 1 ? resolve : reject).call(promise, _value)
+            return
+        }
         let ret
         try {
             ret = cb(_value)
         } catch (error) {
-            
+            reject.call(promise, error)
+            return
         }
+        // 绑定promise说明转交下一个链式方法
         resolve.call(promise, ret)
     })
 }
@@ -101,5 +120,4 @@ const globalNS = (() => {
 })()
 globalNS['Promise'] = Promise
 
-// 1. `resolve`延迟调用
-// 2. `then`得返回新`Promise`实例且能链式调用
+// 4. 终值不能是当前`Promise`实例本身

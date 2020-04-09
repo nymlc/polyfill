@@ -92,6 +92,6 @@ promise.then((val) => {
 1. `resolve`延迟调用
 2. `then`得返回新`Promise`实例且能链式调用
 3. 缺少`catch`方法
-4. 终值、拒因不能是当前`Promise`实例本身
-5. 得兼容终值、拒因是`Promise`实例、`thenable`情况
+4. 终值不能是当前`Promise`实例本身
+5. 得兼容终值是`Promise`实例、`thenable`情况
  */
