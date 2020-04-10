@@ -33,7 +33,7 @@ class Promise {
 function resolve(nVal) {
     try {
         if(nVal === this) {
-            throw new Error('Cannot be resolved with itself!')
+            throw new TypeError('Cannot be resolved with itself!')
         }
         if (nVal && nVal.then) {
             const then = nVal.then

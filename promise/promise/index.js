@@ -95,10 +95,46 @@ function case5() {
     })
 }
 
+function case6() {
+    const p1 = new Promise((resolve) => {
+        setTimeout(() => {
+            resolve('p1')
+        }, 500)
+    })
+    const p2 = new Promise((resolve) => {
+        setTimeout(() => {
+            resolve('p2')
+        }, 300)
+    })
+    Promise.all([p1, p2]).then(val => {
+        console.log(1, val)
+    })
+}
+
+function case0() {
+    const p1 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            reject('p1')
+        }, 500)
+    })
+    const p2 = new Promise((resolve) => {
+        setTimeout(() => {
+            resolve('p2')
+        }, 300)
+    })
+    Promise.all([p1, p2]).then(val => {
+        console.log(1, val)
+    }).catch(reason => {
+        console.error(2, reason)
+    })
+}
+
 window.Case = {
     case1,
     case2,
     case3,
     case4,
-    case5
+    case5,
+    case6,
+    case0
 }

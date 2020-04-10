@@ -39,8 +39,8 @@
             if (r != null) return r[2];
             return null;
         }
-        var index = location.hash.substring(1);
-        var url = index != '' ? `./promise/${index}.js` : `./polyfill.js`
+        var index = location.hash.substring(1) || 0;
+        var url = index ? `./promise/${index}.js` : `./polyfill.js`
         loadScript(url, () => loadScript(`./promise/index.js`, () => {
             window.Case[`case${index}`]()
         }))
