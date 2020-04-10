@@ -73,11 +73,10 @@ function case5() {
         }, 0)
     })
 
-    promise.then((val) => {
-        console.log(1, val)
-        return val
-    }).catch(err => {
+    promise.then(1).catch(err => {
         console.error(2, err)
+    }).then(val => {
+        console.log(3, val)
     })
 
     const thenable = {

@@ -10,8 +10,8 @@ class Promise {
     then(onFulfilled, onRejected) {
         const promise = new Promise(noop)
         handle(this, {
-            onFulfilled,
-            onRejected,
+            onFulfilled: typeof onFulfilled === 'function' ? onFulfilled : null,
+            onRejected: typeof onRejected === 'function' ? onFulfilled : null,
             promise
         })
         return promise
@@ -87,7 +87,7 @@ function handle(self, handler) {
         const { onFulfilled, onRejected, promise } = handler
         const cb = _state === 1 ? onFulfilled : onRejected
         if(cb == null) {
-            // 抛出异常，紧接着却是没有传入onRejected的then，导致cb不存在
+            // 处理的then没有传入函数参数，导致cb不存在，这个需要跳过
             (_state === 1 ? resolve : reject).call(promise, _value)
             return
         }
