@@ -11,7 +11,7 @@ class Promise {
         const promise = new Promise(noop)
         handle(this, {
             onFulfilled: typeof onFulfilled === 'function' ? onFulfilled : null,
-            onRejected: typeof onRejected === 'function' ? onFulfilled : null,
+            onRejected: typeof onRejected === 'function' ? onRejected : null,
             promise
         })
         return promise
@@ -35,12 +35,14 @@ function resolve(nVal) {
         if(nVal === this) {
             throw new TypeError('Cannot be resolved with itself!')
         }
-        if (nVal && nVal.then) {
-            const then = nVal.then
+        const type = typeof nVal
+        const then = (type === 'object' || type === 'function') && nVal && nVal.then
+        if (then) {
             if (nVal instanceof Promise) {
                 this._state = 3
                 this._value = nVal
                 final.call(this)
+                return;
             } else if(typeof then === 'function') {
                 doResolve(this, then.bind(nVal))
                 return
