@@ -109,6 +109,19 @@ function case6() {
     Promise.all([p1, p2]).then(val => {
         console.log(1, val)
     })
+    const p3 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            reject(1)
+        }, 3000)
+    })
+    Promise.resolve(2).finally(() => {
+        console.log(1, 'finally')
+        return p3
+    }).then(val => {
+        console.log(2, val)
+    }).catch(reason => {
+        console.error(3, reason)
+    })
 }
 
 function case0() {
